@@ -1,0 +1,27 @@
+{
+  "name": "myBonsai",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@nuxt/image": "^2.1.0",
+    "@nuxtjs/robots": "^6.1.4",
+    "@nuxtjs/sitemap": "^8.3.4",
+    "contentful": "^11.12.9",
+    "nuxt": "^4.5.2",
+    "swiper": "^14.1.0",
+    "vue": "^3.5.41",
+    "vue-router": "^5.2.0"
+  },
+  "devDependencies": {
+    "@nuxt/eslint": "^1.17.0",
+    "@types/node": "^26.2.0",
+    "eslint": "^10.8.1"
+  }
+}
