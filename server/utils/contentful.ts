@@ -29,4 +29,37 @@ export function getImageUrl(asset: Asset): string {
   return asset?.fields?.file?.url || ''
 }
 
+// Унифицированная нормализация изображений из Contentful
+export interface RawImage {
+  sys: {
+    id: string
+    type?: string
+  }
+  fields?: {
+    file?: {
+      url?: string
+    }
+  }
+}
+
+export interface AssetImage {
+  id: string
+  url: string
+}
+
+export function normalizeImage(image: RawImage, includes: RawImage[]): AssetImage | null {
+  const asset = image.sys.type === 'Link'
+    ? includes.find((item) => item.sys.id === image.sys.id)
+    : image
+
+  if (!asset?.fields?.file?.url) {
+    return null
+  }
+
+  return {
+    id: asset.sys.id,
+    url: `https:${asset.fields.file.url}`,
+  }
+}
+
 export type { Entry, Asset }

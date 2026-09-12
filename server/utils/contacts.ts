@@ -6,7 +6,7 @@ interface NormalizedContact {
   content: string
 }
 
-export async function fetchContacts(): Promise<NormalizedContact[]> {
+const fetchContactsRaw = async (): Promise<NormalizedContact[]> => {
   const client = useContentful()
 
   const response = await client.getEntries({
@@ -23,3 +23,8 @@ export async function fetchContacts(): Promise<NormalizedContact[]> {
     }
   })
 }
+
+export const fetchContacts = defineCachedFunction(fetchContactsRaw, {
+  maxAge: 60 * 15, // 15 минут
+  name: 'fetchContacts',
+})

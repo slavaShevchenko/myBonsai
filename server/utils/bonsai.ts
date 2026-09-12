@@ -1,37 +1,10 @@
-import type { NormalizedBonsai, NormalizedImage } from '../../shared/types/contentful'
-import { useContentful } from './contentful'
+import type { NormalizedBonsai } from '../../shared/types/contentful'
+import { useContentful, normalizeImage, type RawImage, type AssetImage } from './contentful'
 import { makeUniqueSlug } from '../../shared/utils/slugify'
-
-interface RawImage {
-  sys: {
-    id: string
-    type?: string
-  }
-  fields?: {
-    file?: {
-      url?: string
-    }
-  }
-}
 
 interface RawTag {
   sys: {
     id: string
-  }
-}
-
-function normalizeImage(image: RawImage, includes: RawImage[]): NormalizedImage | null {
-  const asset = image.sys.type === 'Link'
-    ? includes.find((item) => item.sys.id === image.sys.id)
-    : image
-
-  if (!asset?.fields?.file?.url) {
-    return null
-  }
-
-  return {
-    id: asset.sys.id,
-    url: `https:${asset.fields.file.url}`,
   }
 }
 
@@ -40,7 +13,7 @@ function normalizeBonsai(entry: any, includes: RawImage[]): Omit<NormalizedBonsa
 
   const images = (fields.images ?? [])
     .map((image: RawImage) => normalizeImage(image, includes))
-    .filter((image: NormalizedImage | null): image is NormalizedImage => image !== null)
+    .filter((image: AssetImage | null): image is AssetImage => image !== null)
 
   return {
     id: entry.sys.id,
@@ -57,7 +30,7 @@ function normalizeBonsai(entry: any, includes: RawImage[]): Omit<NormalizedBonsa
   }
 }
 
-export async function fetchBonsais(): Promise<NormalizedBonsai[]> {
+const fetchBonsaisRaw = async (): Promise<NormalizedBonsai[]> => {
   const client = useContentful()
 
   const response = await client.getEntries({
@@ -76,6 +49,11 @@ export async function fetchBonsais(): Promise<NormalizedBonsai[]> {
     })
     .filter((item) => item.title)
 }
+
+export const fetchBonsais = defineCachedFunction(fetchBonsaisRaw, {
+  maxAge: 60 * 5, // 5 минут
+  name: 'fetchBonsais',
+})
 
 export async function fetchBonsaiBySlug(slug: string): Promise<NormalizedBonsai | null> {
   const all = await fetchBonsais()

@@ -1,44 +1,12 @@
-import { useContentful } from './contentful'
-
-interface RawImage {
-  sys: {
-    id: string
-    type?: string
-  }
-  fields?: {
-    file?: {
-      url?: string
-    }
-  }
-}
-
-interface NormalizedImage {
-  id: string
-  url: string
-}
+import { useContentful, normalizeImage, type RawImage, type AssetImage } from './contentful'
 
 interface NormalizedGalleryItem {
   id: string
-  images: NormalizedImage[]
+  images: AssetImage[]
   description?: string
 }
 
-function normalizeImage(image: RawImage, includes: RawImage[]): NormalizedImage | null {
-  const asset = image.sys.type === 'Link'
-    ? includes.find((item) => item.sys.id === image.sys.id)
-    : image
-
-  if (!asset?.fields?.file?.url) {
-    return null
-  }
-
-  return {
-    id: asset.sys.id,
-    url: `https:${asset.fields.file.url}`,
-  }
-}
-
-export async function fetchGallery(): Promise<NormalizedGalleryItem[]> {
+const fetchGalleryRaw = async (): Promise<NormalizedGalleryItem[]> => {
   const client = useContentful()
 
   const response = await client.getEntries({
@@ -54,7 +22,7 @@ export async function fetchGallery(): Promise<NormalizedGalleryItem[]> {
 
     const images = rawImages
       .map((image) => normalizeImage(image, includes))
-      .filter((image): image is NormalizedImage => image !== null)
+      .filter((image): image is AssetImage => image !== null)
 
     return {
       id: entry.sys.id,
@@ -63,3 +31,8 @@ export async function fetchGallery(): Promise<NormalizedGalleryItem[]> {
     }
   })
 }
+
+export const fetchGallery = defineCachedFunction(fetchGalleryRaw, {
+  maxAge: 60 * 15, // 15 минут
+  name: 'fetchGallery',
+})

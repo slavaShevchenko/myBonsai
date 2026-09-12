@@ -1,16 +1,4 @@
-import { useContentful } from './contentful'
-
-interface RawImage {
-  sys: {
-    id: string
-    type?: string
-  }
-  fields?: {
-    file?: {
-      url?: string
-    }
-  }
-}
+import { useContentful, normalizeImage, type RawImage } from './contentful'
 
 interface NormalizedService {
   id: string
@@ -20,19 +8,7 @@ interface NormalizedService {
   imageUrl?: string
 }
 
-function normalizeImage(image: RawImage, includes: RawImage[]): string | null {
-  const asset = image.sys.type === 'Link'
-    ? includes.find((item) => item.sys.id === image.sys.id)
-    : image
-
-  if (!asset?.fields?.file?.url) {
-    return null
-  }
-
-  return `https:${asset.fields.file.url}`
-}
-
-export async function fetchServices(): Promise<NormalizedService[]> {
+const fetchServicesRaw = async (): Promise<NormalizedService[]> => {
   const client = useContentful()
 
   const response = await client.getEntries({
@@ -46,7 +22,7 @@ export async function fetchServices(): Promise<NormalizedService[]> {
     const fields = entry.fields ?? {}
 
     const imageUrl = fields.image
-      ? normalizeImage(fields.image as RawImage, includes) ?? undefined
+      ? normalizeImage(fields.image as RawImage, includes)?.url
       : undefined
 
     return {
@@ -58,3 +34,8 @@ export async function fetchServices(): Promise<NormalizedService[]> {
     }
   })
 }
+
+export const fetchServices = defineCachedFunction(fetchServicesRaw, {
+  maxAge: 60 * 15, // 15 минут
+  name: 'fetchServices',
+})

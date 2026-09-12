@@ -5,7 +5,7 @@ interface NormalizedPage {
   text: any
 }
 
-export async function fetchMainPage(): Promise<NormalizedPage | null> {
+const fetchMainPageRaw = async (): Promise<NormalizedPage | null> => {
   const client = useContentful()
 
   const response = await client.getEntries({
@@ -21,3 +21,8 @@ export async function fetchMainPage(): Promise<NormalizedPage | null> {
     text: entry.fields?.text ?? null,
   }
 }
+
+export const fetchMainPage = defineCachedFunction(fetchMainPageRaw, {
+  maxAge: 60 * 15, // 15 минут
+  name: 'fetchMainPage',
+})
