@@ -197,6 +197,14 @@ html, body {
   background: var(--accent-color);
 }
 
+/* Loader utility */
+.loader {
+  text-align: center;
+  padding: 60px 0;
+  font-size: 18px;
+  color: var(--text-muted, #666);
+}
+
 @media (max-width: 1299px) {
   .bonsai__grid {
     grid-template-columns: repeat(2, 1fr);

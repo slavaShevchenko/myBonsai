@@ -41,7 +41,12 @@ useHead({
 // Organization JSON-LD — базовая версия без contactPoint
 useOrganizationJsonld()
 
-const { data, pending } = await useMainPage()
+const { data, pending, error } = await useMainPage()
+
+if (error.value) {
+  throw createError({ statusCode: 500, statusMessage: 'Failed to load page content' })
+}
+
 const page = computed(() => data.value?.page)
 </script>
 

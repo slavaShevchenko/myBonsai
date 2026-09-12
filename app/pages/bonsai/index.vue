@@ -48,7 +48,12 @@ useHead({
   link: [{ rel: 'canonical', href: pageUrl }],
 })
 
-const { data, pending } = await useBonsais()
+const { data, pending, error } = await useBonsais()
+
+if (error.value) {
+  throw createError({ statusCode: 500, statusMessage: 'Failed to load bonsai collection' })
+}
+
 const allBonsais = computed<NormalizedBonsai[]>(() => data.value?.items ?? [])
 
 const {

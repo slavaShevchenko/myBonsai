@@ -181,13 +181,6 @@ const popupImage = ref<string | null>(null)
   z-index: 2;
 }
 
-.loader {
-  text-align: center;
-  padding: 60px 0;
-  font-size: 18px;
-  color: var(--text-muted, #666);
-}
-
 .not-found {
   text-align: center;
 }

@@ -61,7 +61,12 @@ useHead({
   link: [{ rel: 'canonical', href: pageUrl }],
 })
 
-const { data, pending } = await useContacts()
+const { data, pending, error } = await useContacts()
+
+if (error.value) {
+  throw createError({ statusCode: 500, statusMessage: 'Failed to load contacts' })
+}
+
 const contacts = computed(() => data.value?.items ?? [])
 
 // Organization JSON-LD с реальными контактами из CMS
@@ -122,13 +127,6 @@ const contactItems = computed(() =>
 </script>
 
 <style scoped>
-.loader {
-  text-align: center;
-  padding: 60px 0;
-  font-size: 18px;
-  color: var(--text-muted);
-}
-
 .contacts__grid {
   gap: 16px;
   max-width: 600px;

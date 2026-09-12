@@ -1,7 +1,6 @@
 import type { NormalizedBonsai } from '../../shared/types/contentful'
 
 interface Response {
-  success: boolean
   item: NormalizedBonsai
 }
 

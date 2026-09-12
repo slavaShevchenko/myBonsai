@@ -69,18 +69,16 @@ useHead({
   ],
 })
 
-const { data, pending } = await useServices()
+const { data, pending, error } = await useServices()
+
+if (error.value) {
+  throw createError({ statusCode: 500, statusMessage: 'Failed to load services' })
+}
+
 const services = computed(() => data.value?.items ?? [])
 </script>
 
 <style scoped>
-.loader {
-  text-align: center;
-  padding: 60px 0;
-  font-size: 18px;
-  color: var(--text-muted);
-}
-
 .services__grid {
   max-width: 1200px;
   margin: 0 auto;

@@ -79,20 +79,18 @@ useHead({
   link: [{ rel: 'canonical', href: pageUrl }],
 })
 
-const { data, pending } = await useGallery()
+const { data, pending, error } = await useGallery()
+
+if (error.value) {
+  throw createError({ statusCode: 500, statusMessage: 'Failed to load gallery' })
+}
+
 const gallery = computed(() => data.value?.items ?? [])
 const popupImage = ref<string | null>(null)
 const currentPopupAlt = ref<string>('Bonsai gallery image')
 </script>
 
 <style scoped>
-.loader {
-  text-align: center;
-  padding: 60px 0;
-  font-size: 18px;
-  color: var(--text-muted);
-}
-
 .gallery__grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
