@@ -10,11 +10,16 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@contentful/rich-text-html-renderer": "^17.2.3",
+    "@contentful/rich-text-plain-text-renderer": "^17.2.1",
+    "@contentful/rich-text-types": "^17.2.7",
     "@nuxt/image": "^2.1.0",
     "@nuxtjs/robots": "^6.1.4",
     "@nuxtjs/sitemap": "^8.3.4",
+    "@pinia/nuxt": "^1.0.2",
     "contentful": "^11.12.9",
     "nuxt": "^4.5.2",
+    "pinia": "^4.0.3",
     "swiper": "^14.1.0",
     "vue": "^3.5.41",
     "vue-router": "^5.2.0"

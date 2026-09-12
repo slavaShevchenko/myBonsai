@@ -3,19 +3,17 @@ export interface NormalizedImage {
   url: string
 }
 
-export interface ParsedPrice {
-  value: number | null
-  sold: boolean
-  display: string | null
-}
-
 export interface NormalizedBonsai {
   id: string
   title: string
   slug: string
   images: NormalizedImage[]
   description?: string
-  price?: ParsedPrice
+  price?: string
   videoLink?: string
   tags: string[]
+  style?: string
+  age?: number
+  height?: number
+  sold?: boolean
 }

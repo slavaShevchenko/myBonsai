@@ -1,4 +1,4 @@
-import type { NormalizedBonsai, NormalizedImage, ParsedPrice } from '../../shared/types/contentful'
+import type { NormalizedBonsai, NormalizedImage } from '../../shared/types/contentful'
 import { useContentful } from './contentful'
 import { makeUniqueSlug } from '../../shared/utils/slugify'
 
@@ -35,14 +35,6 @@ function normalizeImage(image: RawImage, includes: RawImage[]): NormalizedImage 
   }
 }
 
-function parsePrice(raw: unknown): ParsedPrice | null {
-  if (typeof raw !== 'string' || !raw.trim()) return null
-  const sold = raw.toUpperCase().includes('SOLD')
-  const numericMatch = raw.match(/(\d+(?:[\.,]\d+)?)/)
-  const value = numericMatch ? Number(numericMatch[1].replace(',', '.')) : null
-  return { value, sold, display: raw.trim() }
-}
-
 function normalizeBonsai(entry: any, includes: RawImage[]): Omit<NormalizedBonsai, 'slug'> {
   const fields = entry.fields ?? {}
 
@@ -55,9 +47,13 @@ function normalizeBonsai(entry: any, includes: RawImage[]): Omit<NormalizedBonsa
     title: fields.title ?? '',
     images,
     description: fields.description,
-    price: parsePrice(fields.price),
+    price: fields.price,
     videoLink: fields.videoLink,
     tags: (entry.metadata?.tags ?? []).map((tag: RawTag) => tag.sys.id),
+    style: fields.style,
+    age: fields.age,
+    height: fields.height,
+    sold: fields.sold ?? false,
   }
 }
 

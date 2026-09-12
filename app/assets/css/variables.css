@@ -1,0 +1,25 @@
+/* variables.css */
+
+:root {
+  --primary-color: #111813;
+  --accent-color: #BC002D;
+  --link-color: #c46c64;
+  --text-muted: #666666;
+  --white-color: #ffffff;
+  --shadow-light: rgba(0, 0, 0, 0.1);
+  --popup-bg: rgba(0, 0, 0, 0.8);
+
+  --border-radius-16: 16px;
+  --border-radius-8: 8px;
+  --border-radius-4: 4px;
+}
+
+/* Responsive variables */
+@media (max-width: 767px) {
+  :root {
+    --font-size-base: 16px;
+    --h1-size: 24px;
+    --h2-size: 20px;
+    --content-padding: 24px 16px 0 16px;
+  }
+}

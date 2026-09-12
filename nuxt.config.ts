@@ -6,6 +6,7 @@ export default defineNuxtConfig({
   },
 
   modules: [
+    '@pinia/nuxt',
     '@nuxt/image',
     '@nuxtjs/sitemap',
     '@nuxtjs/robots',
@@ -53,5 +54,8 @@ export default defineNuxtConfig({
 
   sitemap: {
     enabled: true,
+    sources: [
+      '/api/__sitemap__/urls',
+    ],
   },
 })
