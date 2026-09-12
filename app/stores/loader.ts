@@ -9,5 +9,5 @@ export const useLoaderStore = defineStore('loader', () => {
     loaderState.value = state
   }
 
-  return { loaderState, isLoading, setLoader }
+  return { isLoading, setLoader }
 })

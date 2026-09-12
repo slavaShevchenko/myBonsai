@@ -33,7 +33,10 @@
             class="bonsai-detail__slider"
           >
             <SwiperSlide v-for="(img, index) in bonsai.images" :key="img.id">
-              <div class="bonsai-detail__slider-image" @click="openPopup(img.url)">
+              <div
+                class="bonsai-detail__slider-image"
+                @click="popupImage = img.url"
+              >
                 <img
                   :src="contentfulImageUrl(img.url, { w: 1200, h: 900 })"
                   :alt="bonsai.title"
@@ -88,12 +91,11 @@
       </div>
     </div>
 
-    <div v-if="popupImage" class="popup" @click.self="closePopup">
-      <div class="popup__content">
-        <button class="popup__close" @click="closePopup">&times;</button>
-        <img :src="popupImage" :alt="bonsai?.title" class="popup__image" />
-      </div>
-    </div>
+    <ImageLightbox
+      v-model="popupImage"
+      :alt="bonsai?.title || 'Bonsai image'"
+      aria-label="Enlarged bonsai image"
+    />
   </div>
 </template>
 
@@ -123,7 +125,6 @@ const mainImage = bonsai.value.images[0]?.url
 const pageTitle = bonsai.value.title
 const pageDescription = bonsai.value.description ?? `Premium bonsai: ${bonsai.value.title}. ${bonsai.value.price ?? ''}`.trim()
 
-// Helper for Schema.org price (Google requires a number)
 const schemaPrice = computed(() => {
   if (!bonsai.value.price) return 0
   const match = String(bonsai.value.price).match(/(\d+(?:[\.,]\d+)?)/)
@@ -133,10 +134,7 @@ const schemaPrice = computed(() => {
 useHead({
   title: pageTitle,
   meta: [
-    {
-      name: 'description',
-      content: pageDescription,
-    },
+    { name: 'description', content: pageDescription },
     { property: 'og:title', content: pageTitle },
     { property: 'og:description', content: pageDescription },
     { property: 'og:type', content: 'product' },
@@ -160,10 +158,7 @@ useJsonld(() => ({
   name: bonsai.value.title,
   image: bonsai.value.images.map((img) => img.url),
   description: bonsai.value.description ?? '',
-  brand: {
-    '@type': 'Brand',
-    name: 'My Bonsai',
-  },
+  brand: { '@type': 'Brand', name: 'My Bonsai' },
   offers: {
     '@type': 'Offer',
     priceCurrency: 'EUR',
@@ -176,14 +171,6 @@ useJsonld(() => ({
 }))
 
 const popupImage = ref<string | null>(null)
-
-const openPopup = (imageUrl: string) => {
-  popupImage.value = imageUrl
-}
-
-const closePopup = () => {
-  popupImage.value = null
-}
 </script>
 
 <style scoped>

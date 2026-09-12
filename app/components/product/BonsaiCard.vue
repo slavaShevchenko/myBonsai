@@ -123,7 +123,7 @@ defineProps<{
 .bonsai-card__spec-value {
   color: var(--primary-color);
   font-weight: 600;
-  Font-size: 16px;
+  font-size: 16px;
 }
 
 .bonsai-card__price {
