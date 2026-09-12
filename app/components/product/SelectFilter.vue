@@ -29,11 +29,15 @@
           :key="item.id"
           type="button"
           class="select-option"
-          :class="{ 'select-option--active': modelValue === item.id }"
+          :class="{
+            'select-option--active': modelValue === item.id,
+            'select-option--disabled': item.count === 0 && modelValue !== item.id,
+          }"
+          :disabled="item.count === 0 && modelValue !== item.id"
           @click="select(item.id)"
         >
           <span>{{ item.label }}</span>
-          <span v-if="item.count" class="select-count">{{ item.count }}</span>
+          <span class="select-count">{{ item.count }}</span>
         </button>
       </div>
     </Transition>
@@ -41,8 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
-import type { FilterItem } from './FilterButtons.vue'
+import type { FilterItem } from '../../../shared/types/filter'
 
 const props = defineProps<{
   items: FilterItem[]
@@ -204,10 +207,18 @@ onBeforeUnmount(() => {
   transform: translateY(-8px);
 }
 
+.select-option--disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.select-option--disabled:hover {
+  background: none;
+}
+
 @media (max-width: 767px) {
   .select-filter {
-    width: 100%;
-    margin-bottom: 0;
+    display: flex;
   }
 }
 </style>

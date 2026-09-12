@@ -1,11 +1,12 @@
 import { defineSitemapEventHandler, asSitemapUrl } from '#imports'
 import { fetchBonsais } from '../../utils/bonsai'
+import { getAllStyles } from '../../../shared/data/styles'
 
 export default defineSitemapEventHandler(async () => {
-  const config = useRuntimeConfig()
   const bonsais = await fetchBonsais()
+  const styles = getAllStyles()
 
-  return bonsais.map((bonsai) => {
+  const bonsaiUrls = bonsais.map((bonsai) => {
     return asSitemapUrl({
       loc: `/bonsai/${bonsai.slug}`,
       lastmod: new Date(),
@@ -17,4 +18,15 @@ export default defineSitemapEventHandler(async () => {
       })),
     })
   })
+
+  const styleUrls = styles.map((style) => {
+    return asSitemapUrl({
+      loc: `/bonsai/style/${style.slug}`,
+      lastmod: new Date(),
+      changefreq: 'monthly',
+      priority: 0.7,
+    })
+  })
+
+  return [...bonsaiUrls, ...styleUrls]
 })

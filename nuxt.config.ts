@@ -24,7 +24,7 @@ export default defineNuxtConfig({
       htmlAttrs: {
         lang: 'en',
       },
-      titleTemplate: '%s | Bonsai Shop',
+      titleTemplate: '%s | My Bonsai',
       meta: [
         {
           name: 'viewport',
@@ -44,12 +44,12 @@ export default defineNuxtConfig({
     contentfulPreviewAccessToken: '',
     contentfulEnvironment: 'master',
     public: {
-      siteUrl: 'http://localhost:3000',
+      siteUrl: 'https://my-bonsai.eu',
     },
   },
 
   site: {
-    url: 'http://localhost:3000',
+    url: 'https://my-bonsai.eu',
   },
 
   sitemap: {

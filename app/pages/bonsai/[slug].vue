@@ -3,24 +3,24 @@
     <div v-if="pending" class="loader">Loading...</div>
 
     <div v-else-if="!bonsai" class="not-found">
-      <div class="main__header">
+      <h1 class="main__header">
         <div class="main__header-wrap">
           Bonsai not found
           <NavigationIcon :size="48" />
         </div>
-      </div>
+      </h1>
       <div class="not-found__text">
         Go back to <NuxtLink to="/bonsai">Catalog</NuxtLink>
       </div>
     </div>
 
     <div v-else>
-      <div class="main__header">
+      <h1 class="main__header">
         <div class="main__header-wrap">
           {{ bonsai.title }}
           <NavigationIcon :size="48" />
         </div>
-      </div>
+      </h1>
 
       <div class="bonsai-detail">
         <div class="bonsai-detail__image">
@@ -32,9 +32,13 @@
             :pagination="{ clickable: true }"
             class="bonsai-detail__slider"
           >
-            <SwiperSlide v-for="img in bonsai.images" :key="img.id">
+            <SwiperSlide v-for="(img, index) in bonsai.images" :key="img.id">
               <div class="bonsai-detail__slider-image" @click="openPopup(img.url)">
-                <img :src="img.url" :alt="bonsai.title" />
+                <img
+                  :src="contentfulImageUrl(img.url, { w: 1200, h: 900 })"
+                  :alt="bonsai.title"
+                  :loading="index === 0 ? 'eager' : 'lazy'"
+                />
                 <span v-if="bonsai.sold" class="bonsai-detail__sold">SOLD</span>
               </div>
             </SwiperSlide>
@@ -94,6 +98,7 @@
 </template>
 
 <script setup lang="ts">
+import { contentfulImageUrl } from '../../../shared/utils/contentful-image'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Pagination, Navigation } from 'swiper/modules'
 import 'swiper/css'
@@ -111,8 +116,12 @@ if (error.value || !bonsai.value) {
   throw createError({ statusCode: 404, statusMessage: 'Bonsai not found' })
 }
 
+route.meta.breadcrumbTitle = bonsai.value.title
+
 const pageUrl = `${config.public.siteUrl}/bonsai/${slug}`
 const mainImage = bonsai.value.images[0]?.url
+const pageTitle = bonsai.value.title
+const pageDescription = bonsai.value.description ?? `Premium bonsai: ${bonsai.value.title}. ${bonsai.value.price ?? ''}`.trim()
 
 // Helper for Schema.org price (Google requires a number)
 const schemaPrice = computed(() => {
@@ -122,17 +131,14 @@ const schemaPrice = computed(() => {
 })
 
 useHead({
-  title: `${bonsai.value.title} | My Bonsai`,
+  title: pageTitle,
   meta: [
     {
       name: 'description',
-      content: bonsai.value.description ?? `Premium bonsai: ${bonsai.value.title}. ${bonsai.value.price ?? ''}`.trim(),
+      content: pageDescription,
     },
-    { property: 'og:title', content: `${bonsai.value.title} | My Bonsai` },
-    {
-      property: 'og:description',
-      content: bonsai.value.description ?? `Premium bonsai: ${bonsai.value.title}. ${bonsai.value.price ?? ''}`.trim(),
-    },
+    { property: 'og:title', content: pageTitle },
+    { property: 'og:description', content: pageDescription },
     { property: 'og:type', content: 'product' },
     { property: 'og:url', content: pageUrl },
     ...(mainImage
@@ -142,6 +148,8 @@ useHead({
         ]
       : []),
     { name: 'twitter:card', content: 'summary_large_image' },
+    { name: 'twitter:title', content: pageTitle },
+    { name: 'twitter:description', content: pageDescription },
   ],
   link: [{ rel: 'canonical', href: pageUrl }],
 })

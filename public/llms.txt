@@ -1,0 +1,39 @@
+# My Bonsai
+
+> My Bonsai (my-bonsai.eu) is a premium bonsai catalog and shop based in Ireland. We sell hand-cultivated Japanese bonsai trees with delivery across Ireland and Europe, and provide professional bonsai care services. Every tree is a one-of-a-kind specimen; sold trees stay in the catalog marked as SOLD.
+
+## How to buy
+
+- Browse the catalog or a style page, open a tree's page, then contact the shop via the contacts page (phone, email or social media) to purchase. Prices are in EUR.
+
+## Catalog and shop pages
+
+- [Bonsai catalog](https://my-bonsai.eu/bonsai): All bonsai trees for sale, filterable by type (evergreen, deciduous), style and availability.
+- [Services](https://my-bonsai.eu/services): Professional bonsai care — pruning, repotting, styling and maintenance, with prices.
+- [Gallery](https://my-bonsai.eu/gallery): Photo gallery of our trees and projects.
+- [Contacts](https://my-bonsai.eu/contacts): Phone, email, location and social media for purchases and advice.
+
+## Bonsai styles
+
+Each style page explains the tradition and lists the trees currently available in that style:
+
+- [Moyogi — informal upright](https://my-bonsai.eu/bonsai/style/moyogi): Natural trunk with gentle curves, apex directly above the base.
+- [Chokkan — formal upright](https://my-bonsai.eu/bonsai/style/chokkan): Straight tapering trunk with symmetrical branching.
+- [Shakkan — slanted](https://my-bonsai.eu/bonsai/style/shakkan): Trunk leaning at 60–80 degrees, shaped by wind or slope.
+- [Sokan — twin trunk](https://my-bonsai.eu/bonsai/style/sokan): Two trunks from one root, traditionally parent and child.
+- [Kabudachi — multi-trunk](https://my-bonsai.eu/bonsai/style/kabudachi): Several trunks growing from a single base.
+- [Yose-ue — forest planting](https://my-bonsai.eu/bonsai/style/yose-ue): Miniature forest of multiple trees in one container.
+- [Hokidachi — broom](https://my-bonsai.eu/bonsai/style/hokidachi): Straight trunk with a symmetrical dome-shaped crown, mostly deciduous.
+- [Bunjin-gi — literati](https://my-bonsai.eu/bonsai/style/bunjin-gi): Tall slender trunk with sparse foliage, artistic minimalism.
+- [Kengai — cascade](https://my-bonsai.eu/bonsai/style/kengai): Trunk cascading below the base of the pot, cliff-grown look.
+- [Han-kengai — semi-cascade](https://my-bonsai.eu/bonsai/style/han-kengai): Branches extending below the pot rim but not below its base.
+- [Fukinagashi — windswept](https://my-bonsai.eu/bonsai/style/fukinagashi): All branches swept to one side by persistent wind.
+- [Sharimiki — deadwood](https://my-bonsai.eu/bonsai/style/sharimiki): Exposed deadwood (shari and jin) showing age and survival.
+- [Ishizuki — root-over-rock](https://my-bonsai.eu/bonsai/style/ishizuki): Roots gripping a rock, as in mountain crevices.
+- [Neagari — exposed roots](https://my-bonsai.eu/bonsai/style/neagari): Root system exposed above the soil line.
+
+## Facts
+
+- Based in Ireland; delivery across Ireland and Europe.
+- Prices in EUR; each tree is unique and sold once.
+- Trees are hand-cultivated over many years; age and height are listed on every tree page.

@@ -3,6 +3,7 @@
     <Header />
     <Navigation />
     <div class="content">
+      <Breadcrumb />
       <div class="content__left-img">
         <NavigationIcon :size="800" />
       </div>

@@ -5,10 +5,39 @@
 <script setup lang="ts">
 import { documentToHtmlString } from '@contentful/rich-text-html-renderer'
 import { BLOCKS, INLINES } from '@contentful/rich-text-types'
+import { contentfulImageUrl } from '../../shared/utils/contentful-image'
 
 const props = defineProps<{
   document: any
 }>()
+
+// Экранирование значений атрибутов (защита от выхода из alt="" и href="")
+function escapeAttr(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
+// Экранирование HTML-текста
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+}
+
+// Разрешаем только безопасные протоколы ссылок
+function isSafeUrl(url: string): boolean {
+  try {
+    const parsed = new URL(url, 'https://example.com')
+    return ['http:', 'https:', 'mailto:', 'tel:'].includes(parsed.protocol)
+  } catch {
+    return false
+  }
+}
 
 const html = computed(() => {
   if (!props.document) return ''
@@ -16,14 +45,17 @@ const html = computed(() => {
   const options = {
     renderNode: {
       [BLOCKS.EMBEDDED_ASSET]: (node: any) => {
-        const url = node.data.target.fields.file.url
-        const alt = node.data.target.fields.title || ''
-        return `<img src="https:${url}" alt="${alt}" />`
+        const file = node.data.target?.fields?.file
+        if (!file?.url) return ''
+        const url = escapeAttr(contentfulImageUrl(`https:${file.url}`, { w: 1600, q: 80 }))
+        const alt = escapeAttr(file.title || '')
+        return `<img src="${url}" alt="${alt}" loading="lazy" decoding="async" />`
       },
       [INLINES.HYPERLINK]: (node: any) => {
-        const url = node.data.uri
-        const text = node.content.map((c: any) => c.value).join('')
-        return `<a href="${url}" target="_blank" rel="noopener">${text}</a>`
+        const url = node.data.uri || ''
+        const text = escapeHtml(node.content.map((c: any) => c.value).join(''))
+        if (!isSafeUrl(url)) return text
+        return `<a href="${escapeAttr(url)}" target="_blank" rel="noopener">${text}</a>`
       },
     },
   }

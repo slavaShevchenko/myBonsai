@@ -7,7 +7,7 @@
       <NuxtLink to="/">Home</NuxtLink>
     </div>
     <div class="navigation__item">
-      <NuxtLink to="/bonsai">Bonsai</NuxtLink>
+      <NuxtLink to="/bonsai" :class="{ 'router-link-active': isActiveBonsai }">Bonsai</NuxtLink>
     </div>
     <div class="navigation__item">
       <NuxtLink to="/services">Services</NuxtLink>
@@ -23,6 +23,14 @@
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+const route = useRoute()
+
+const isActiveBonsai = computed(() => {
+  return route.path === '/bonsai' || route.path.startsWith('/bonsai/')
+})
+</script>
 
 <style scoped>
 .navigation {

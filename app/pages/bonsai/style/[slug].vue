@@ -1,8 +1,9 @@
 <template>
-  <div>
-    <h1 class="page-title">Bonsai Collection</h1>
-
-    <p class="catalog-description">{{ allStylesData.description }}</p>
+  <div v-if="styleData">
+    <div class="style-header">
+      <h1 class="style-title">{{ styleData.title }} Bonsai</h1>
+      <p class="style-description">{{ styleData.description }}</p>
+    </div>
 
     <div class="filters">
       <SelectFilter
@@ -11,14 +12,12 @@
         all-label="All Types"
         label="Type"
       />
-
       <SelectFilter
         :items="availableStyles"
         v-model="selectedStyleId"
         all-label="All Styles"
         label="Style"
       />
-
       <SelectFilter
         :items="availabilityOptions"
         v-model="selectedAvailability"
@@ -38,7 +37,7 @@
     </div>
 
     <div v-else class="empty">
-      No bonsai found matching your filters
+      No {{ styleData.title }} bonsai found matching your filters
     </div>
   </div>
 </template>
@@ -46,14 +45,23 @@
 <script setup lang="ts">
 import type { NormalizedBonsai } from '../../../shared/types/contentful'
 import type { FilterItem } from '../../../shared/types/filter'
-import { allStylesData } from '../../../shared/data/styles'
+import { getStyleBySlug, getAllStyles } from '../../../shared/data/styles'
 
-const config = useRuntimeConfig()
+const route = useRoute()
 const router = useRouter()
+const config = useRuntimeConfig()
+const slug = String(route.params.slug || '').toLowerCase()
 
-// Убираем "| My Bonsai" из конца, так как titleTemplate добавит его сам
-const pageTitle = 'Bonsai Trees for Sale | All Traditional Japanese Styles'
-const pageDescription = allStylesData.metaDescription
+const styleData = getStyleBySlug(slug)
+
+if (!styleData) {
+  throw createError({ statusCode: 404, statusMessage: 'Style not found' })
+}
+
+// Убираем "| My Bonsai" из конца — titleTemplate добавит его сам
+const pageTitle = styleData.metaTitle.replace(/\s*\|\s*My Bonsai$/, '')
+const pageDescription = styleData.metaDescription
+const pageUrl = `${config.public.siteUrl}/bonsai/style/${slug}`
 
 useHead({
   title: pageTitle,
@@ -66,7 +74,7 @@ useHead({
     { property: 'og:title', content: pageTitle },
     { property: 'og:description', content: pageDescription },
     { property: 'og:type', content: 'website' },
-    { property: 'og:url', content: `${config.public.siteUrl}/bonsai` },
+    { property: 'og:url', content: pageUrl },
     { property: 'og:image', content: `${config.public.siteUrl}/header-desktop.webp` },
     { property: 'og:site_name', content: 'My Bonsai' },
     { property: 'og:locale', content: 'en_IE' },
@@ -79,29 +87,52 @@ useHead({
   link: [
     {
       rel: 'canonical',
-      href: `${config.public.siteUrl}/bonsai`,
+      href: pageUrl,
     },
   ],
 })
 
 const { data, pending } = await useBonsais()
+const selectedStyleId = ref<string | null>(slug)
 const selectedTagId = ref<string | null>(null)
-const selectedStyleId = ref<string | null>(null)
 const selectedAvailability = ref<string | null>(null)
 
 const allBonsais = computed<NormalizedBonsai[]>(() => data.value?.items ?? [])
 
-const baseSubset = computed(() => {
-  return allBonsais.value.filter((item) => {
+const availableStyles = computed<FilterItem[]>(() => {
+  const subset = allBonsais.value.filter((item) => {
     if (selectedTagId.value && !item.tags.includes(selectedTagId.value)) return false
-    if (selectedStyleId.value && item.style !== selectedStyleId.value) return false
+    if (selectedAvailability.value === 'available' && item.sold) return false
+    if (selectedAvailability.value === 'sold' && !item.sold) return false
     return true
   })
+
+  const counts = new Map<string, number>()
+  for (const style of getAllStyles()) {
+    counts.set(style.slug.toLowerCase(), 0)
+  }
+  for (const item of subset) {
+    if (item.style) {
+      const styleLower = item.style.toLowerCase()
+      counts.set(styleLower, (counts.get(styleLower) ?? 0) + 1)
+    }
+  }
+
+  return Array.from(counts.entries())
+    .map(([id, count]) => {
+      const styleInfo = getAllStyles().find((s) => s.slug.toLowerCase() === id)
+      return {
+        id,
+        label: styleInfo ? styleInfo.title : id,
+        count,
+      }
+    })
+    .sort((a, b) => b.count - a.count)
 })
 
 const availableTags = computed<FilterItem[]>(() => {
   const subset = allBonsais.value.filter((item) => {
-    if (selectedStyleId.value && item.style !== selectedStyleId.value) return false
+    if (item.style?.toLowerCase() !== slug) return false
     if (selectedAvailability.value === 'available' && item.sold) return false
     if (selectedAvailability.value === 'sold' && !item.sold) return false
     return true
@@ -124,66 +155,61 @@ const availableTags = computed<FilterItem[]>(() => {
     .sort((a, b) => b.count - a.count)
 })
 
-const availableStyles = computed<FilterItem[]>(() => {
-  const subset = allBonsais.value.filter((item) => {
-    if (selectedTagId.value && !item.tags.includes(selectedTagId.value)) return false
-    if (selectedAvailability.value === 'available' && item.sold) return false
-    if (selectedAvailability.value === 'sold' && !item.sold) return false
+const availabilityOptions = computed<FilterItem[]>(() => {
+  const subset = allBonsais.value.filter((b) => {
+    if (b.style?.toLowerCase() !== slug) return false
+    if (selectedTagId.value && !b.tags.includes(selectedTagId.value)) return false
     return true
   })
 
-  const counts = new Map<string, number>()
-  for (const item of allBonsais.value) {
-    if (item.style && !counts.has(item.style)) counts.set(item.style, 0)
-  }
-  for (const item of subset) {
-    if (item.style) {
-      counts.set(item.style, (counts.get(item.style) ?? 0) + 1)
-    }
-  }
-
-  return Array.from(counts.entries())
-    .map(([id, count]) => ({ id, label: id, count }))
-    .sort((a, b) => b.count - a.count)
-})
-
-const availabilityOptions = computed<FilterItem[]>(() => {
-  const available = baseSubset.value.filter((b) => !b.sold).length
-  const sold = baseSubset.value.filter((b) => b.sold).length
-
   return [
-    { id: 'available', label: 'Available', count: available },
-    { id: 'sold', label: 'Sold', count: sold },
+    { id: 'available', label: 'Available', count: subset.filter((b) => !b.sold).length },
+    { id: 'sold', label: 'Sold', count: subset.filter((b) => b.sold).length },
   ]
 })
 
 const filteredBonsais = computed(() => {
-  const filtered = baseSubset.value.filter((item) => {
+  return allBonsais.value.filter((item) => {
+    if (item.style?.toLowerCase() !== slug) return false
+    if (selectedTagId.value && !item.tags.includes(selectedTagId.value)) return false
     if (selectedAvailability.value === 'available' && item.sold) return false
     if (selectedAvailability.value === 'sold' && !item.sold) return false
     return true
-  })
-
-  return filtered.sort((a, b) => {
+  }).sort((a, b) => {
     if (a.sold === b.sold) return 0
     return a.sold ? 1 : -1
   })
 })
 
 watch(selectedStyleId, (newStyleId) => {
-  if (newStyleId) {
+  if (newStyleId === null) {
+    router.push('/bonsai')
+    return
+  }
+  if (newStyleId !== slug) {
     router.push(`/bonsai/style/${newStyleId}`)
   }
 })
 </script>
 
 <style scoped>
-.page-title {
+.style-header {
+  max-width: 800px;
+  margin: 0 auto 40px;
+  text-align: center;
+}
+
+.style-title {
   font-size: 48px;
   font-weight: 800;
-  margin-top: 0;
-  margin-bottom: 32px;
-  text-align: center;
+  margin-bottom: 24px;
+  color: var(--primary-color, #111813);
+}
+
+.style-description {
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--text-muted, #666);
 }
 
 .filters {
@@ -208,15 +234,6 @@ watch(selectedStyleId, (newStyleId) => {
   color: var(--text-muted, #666);
 }
 
-.catalog-description {
-  max-width: 800px;
-  margin: -16px auto 32px;
-  text-align: center;
-  font-size: 18px;
-  line-height: 1.6;
-  color: var(--text-muted, #666);
-}
-
 @media (max-width: 1679px) {
   .bonsai__grid {
     grid-template-columns: repeat(4, 1fr);
@@ -236,8 +253,11 @@ watch(selectedStyleId, (newStyleId) => {
 }
 
 @media (max-width: 767px) {
-  .page-title {
+  .style-title {
     font-size: 32px;
+  }
+  .style-description {
+    font-size: 16px;
   }
   .bonsai__grid {
     grid-template-columns: 1fr;

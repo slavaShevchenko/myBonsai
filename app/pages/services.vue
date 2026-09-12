@@ -1,18 +1,22 @@
 <template>
   <div>
-    <div class="main__header">
+    <h1 class="main__header">
       <div class="main__header-wrap">
         Services
         <NavigationIcon :size="48" />
       </div>
-    </div>
+    </h1>
 
     <div v-if="pending" class="loader">Loading...</div>
 
     <div v-else class="services__grid">
       <div v-for="service in services" :key="service.id" class="services__grid-item">
         <div v-if="service.imageUrl" class="services__item-image">
-          <img :src="service.imageUrl" :alt="service.title" />
+          <img
+            :src="contentfulImageUrl(service.imageUrl, { w: 800, h: 533 })"
+            :alt="service.title"
+            loading="lazy"
+          />
         </div>
         <div class="services__item-content">
           <div>
@@ -30,12 +34,37 @@
 </template>
 
 <script setup lang="ts">
+import { contentfulImageUrl } from '../../shared/utils/contentful-image'
+const config = useRuntimeConfig()
+const pageUrl = `${config.public.siteUrl}/services`
+const pageTitle = 'Bonsai Care & Maintenance Services'
+const pageDescription = 'Professional bonsai care, pruning, repotting, styling and maintenance services. Keep your bonsai healthy with expert care.'
+
 useHead({
-  title: 'Bonsai Care & Maintenance Services | My Bonsai',
+  title: pageTitle,
   meta: [
     {
       name: 'description',
-      content: 'Professional bonsai care, pruning, repotting, styling and maintenance services. Keep your bonsai healthy with expert care.',
+      content: pageDescription,
+    },
+    // OpenGraph
+    { property: 'og:title', content: pageTitle },
+    { property: 'og:description', content: pageDescription },
+    { property: 'og:type', content: 'website' },
+    { property: 'og:url', content: pageUrl },
+    { property: 'og:image', content: `${config.public.siteUrl}/header-desktop.webp` },
+    { property: 'og:site_name', content: 'My Bonsai' },
+    { property: 'og:locale', content: 'en_IE' },
+    // Twitter Card
+    { name: 'twitter:card', content: 'summary_large_image' },
+    { name: 'twitter:title', content: pageTitle },
+    { name: 'twitter:description', content: pageDescription },
+    { name: 'twitter:image', content: `${config.public.siteUrl}/header-desktop.webp` },
+  ],
+  link: [
+    {
+      rel: 'canonical',
+      href: pageUrl,
     },
   ],
 })

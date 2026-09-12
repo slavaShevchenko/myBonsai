@@ -1,16 +1,16 @@
 <template>
   <div>
-    <div class="main__header">
+    <h1 class="main__header">
       <div class="main__header-wrap">
         Gallery
         <NavigationIcon :size="48" />
       </div>
-    </div>
+    </h1>
 
     <div v-if="pending" class="loader">Loading...</div>
 
     <div v-else class="gallery__grid">
-      <div v-for="item in gallery" :key="item.id" class="gallery__grid-item">
+      <div v-for="(item, index) in gallery" :key="item.id" class="gallery__grid-item">
         <div v-if="item.images.length" class="gallery__item-swiper">
           <Swiper
             :modules="[Pagination, Navigation]"
@@ -21,7 +21,11 @@
           >
             <SwiperSlide v-for="img in item.images" :key="img.id">
               <div class="gallery__slider-image" @click="openPopup(img.url)">
-                <img :src="img.url" alt="Gallery image" />
+                <img
+                  :src="contentfulImageUrl(img.url, { w: 900 })"
+                  :alt="item.description || `Bonsai gallery image ${index + 1}`"
+                  loading="lazy"
+                />
               </div>
             </SwiperSlide>
           </Swiper>
@@ -32,28 +36,71 @@
       </div>
     </div>
 
-    <div v-if="popupImage" class="popup" @click.self="closePopup">
+    <div
+      v-if="popupImage"
+      class="popup"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Enlarged image view"
+      @click.self="closePopup"
+      @keydown.esc="closePopup"
+    >
       <div class="popup__content">
-        <button class="popup__close" @click="closePopup">&times;</button>
-        <img :src="popupImage" alt="Enlarged image" class="popup__image" />
+        <button
+          class="popup__close"
+          @click="closePopup"
+          aria-label="Close image preview"
+        >
+          &times;
+        </button>
+        <img
+          :src="popupImage"
+          :alt="`Enlarged: ${currentPopupAlt}`"
+          class="popup__image"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { contentfulImageUrl } from '../../shared/utils/contentful-image'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Pagination, Navigation } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 
+const config = useRuntimeConfig()
+const pageUrl = `${config.public.siteUrl}/gallery`
+const pageTitle = 'Bonsai Gallery'
+const pageDescription = 'Explore our bonsai gallery featuring Japanese bonsai trees, customer projects and handcrafted miniature trees.'
+
 useHead({
-  title: 'Bonsai Gallery | Japanese Bonsai Collection',
+  title: pageTitle,
   meta: [
     {
       name: 'description',
-      content: 'Explore our bonsai gallery featuring Japanese bonsai trees, customer projects and handcrafted miniature trees.',
+      content: pageDescription,
+    },
+    // OpenGraph
+    { property: 'og:title', content: pageTitle },
+    { property: 'og:description', content: pageDescription },
+    { property: 'og:type', content: 'website' },
+    { property: 'og:url', content: pageUrl },
+    { property: 'og:image', content: `${config.public.siteUrl}/header-desktop.webp` },
+    { property: 'og:site_name', content: 'My Bonsai' },
+    { property: 'og:locale', content: 'en_IE' },
+    // Twitter Card
+    { name: 'twitter:card', content: 'summary_large_image' },
+    { name: 'twitter:title', content: pageTitle },
+    { name: 'twitter:description', content: pageDescription },
+    { name: 'twitter:image', content: `${config.public.siteUrl}/header-desktop.webp` },
+  ],
+  link: [
+    {
+      rel: 'canonical',
+      href: pageUrl,
     },
   ],
 })
@@ -61,13 +108,16 @@ useHead({
 const { data, pending } = await useGallery()
 const gallery = computed(() => data.value?.items ?? [])
 const popupImage = ref<string | null>(null)
+const currentPopupAlt = ref<string>('')
 
-const openPopup = (imageUrl: string) => {
+const openPopup = (imageUrl: string, alt: string = '') => {
   popupImage.value = imageUrl
+  currentPopupAlt.value = alt || 'Bonsai gallery image'
 }
 
 const closePopup = () => {
   popupImage.value = null
+  currentPopupAlt.value = ''
 }
 </script>
 

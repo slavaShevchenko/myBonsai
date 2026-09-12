@@ -1,7 +1,11 @@
 <template>
   <NuxtLink :to="`/bonsai/${bonsai.slug}`" class="bonsai-card">
     <div v-if="bonsai.images.length" class="bonsai-card__image">
-      <img :src="bonsai.images[0].url" :alt="bonsai.title" />
+      <img
+        :src="contentfulImageUrl(bonsai.images[0].url, { w: 600, h: 450 })"
+        :alt="bonsai.title"
+        loading="lazy"
+      />
       <span v-if="bonsai.sold" class="bonsai-card__sold">SOLD</span>
     </div>
     <div class="bonsai-card__body">
@@ -31,6 +35,7 @@
 
 <script setup lang="ts">
 import type { NormalizedBonsai } from '../../../shared/types/contentful'
+import { contentfulImageUrl } from '../../../shared/utils/contentful-image'
 
 defineProps<{
   bonsai: NormalizedBonsai

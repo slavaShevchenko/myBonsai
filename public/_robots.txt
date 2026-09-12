@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: http://my-bonsai.eu/sitemap.xml
+Sitemap: https://my-bonsai.eu/sitemap.xml
