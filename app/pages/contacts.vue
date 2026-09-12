@@ -45,11 +45,7 @@ const pageDescription = 'Contact My Bonsai for bonsai sales, expert advice and p
 useHead({
   title: pageTitle,
   meta: [
-    {
-      name: 'description',
-      content: pageDescription,
-    },
-    // OpenGraph
+    { name: 'description', content: pageDescription },
     { property: 'og:title', content: pageTitle },
     { property: 'og:description', content: pageDescription },
     { property: 'og:type', content: 'website' },
@@ -57,66 +53,55 @@ useHead({
     { property: 'og:image', content: `${config.public.siteUrl}/header-desktop.webp` },
     { property: 'og:site_name', content: 'My Bonsai' },
     { property: 'og:locale', content: 'en_IE' },
-    // Twitter Card
     { name: 'twitter:card', content: 'summary_large_image' },
     { name: 'twitter:title', content: pageTitle },
     { name: 'twitter:description', content: pageDescription },
     { name: 'twitter:image', content: `${config.public.siteUrl}/header-desktop.webp` },
   ],
-  link: [
-    {
-      rel: 'canonical',
-      href: pageUrl,
-    },
-  ],
+  link: [{ rel: 'canonical', href: pageUrl }],
 })
 
 const { data, pending } = await useContacts()
 const contacts = computed(() => data.value?.items ?? [])
 
-// Определяем тип контакта и строим кликабельную ссылку
+// Organization JSON-LD с реальными контактами из CMS
+useOrganizationJsonld(contacts)
+
 function contactHref(type: string, content: string): string | null {
   const t = type.toLowerCase()
   const c = content.trim()
 
   if (!c) return null
 
-  // Phone number: "353873395697 Andrii" -> "tel:353873395697"
   if (t.includes('phone') || t.includes('tel') || t.includes('mobile')) {
     const digits = c.split(' ')[0].replace(/[^\d+]/g, '')
     return digits ? `tel:${digits}` : null
   }
 
-  // e-mail -> mailto:
   if (t.includes('mail')) {
     return `mailto:${c}`
   }
 
-  // Instagram -> https://instagram.com/username
   if (t.includes('instagram')) {
     const username = c.replace(/^@/, '').replace(/^https?:\/\/(?:www\.)?instagram\.com\//, '')
     return `https://instagram.com/${username}`
   }
 
-  // WhatsApp -> https://wa.me/username_or_number
   if (t.includes('whatsapp') || t.includes('wa')) {
     const handle = c.replace(/^@/, '').replace(/^https?:\/\/(?:wa\.me|api\.whatsapp\.com\/send\?phone=)/, '')
     return `https://wa.me/${handle}`
   }
 
-  // Facebook
   if (t.includes('facebook')) {
     const handle = c.replace(/^https?:\/\/(?:www\.)?facebook\.com\//, '')
     return `https://facebook.com/${handle}`
   }
 
-  // Фолбэк: общий веб
   if (t.includes('web') || t.includes('site') || t.includes('social')) {
     if (c.startsWith('http://') || c.startsWith('https://')) return c
     return `https://${c.replace(/^www\./, 'www.')}`
   }
 
-  // Фолбэк по содержимому
   if (c.includes('@') && !c.startsWith('http')) return `mailto:${c}`
   if (c.startsWith('http://') || c.startsWith('https://')) return c
   if (c.startsWith('www.')) return `https://${c}`

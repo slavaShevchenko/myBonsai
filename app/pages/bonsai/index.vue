@@ -23,38 +23,29 @@ import type { NormalizedBonsai } from '../../../shared/types/contentful'
 import { allStylesData } from '../../../shared/data/styles'
 
 const config = useRuntimeConfig()
+const baseUrl = config.public.siteUrl
 
-// Убираем "| My Bonsai" из конца, так как titleTemplate добавит его сам
 const pageTitle = 'Bonsai Trees for Sale | All Traditional Japanese Styles'
 const pageDescription = allStylesData.metaDescription
+const pageUrl = `${baseUrl}/bonsai`
 
 useHead({
   title: pageTitle,
   meta: [
-    {
-      name: 'description',
-      content: pageDescription,
-    },
-    // OpenGraph
+    { name: 'description', content: pageDescription },
     { property: 'og:title', content: pageTitle },
     { property: 'og:description', content: pageDescription },
     { property: 'og:type', content: 'website' },
-    { property: 'og:url', content: `${config.public.siteUrl}/bonsai` },
-    { property: 'og:image', content: `${config.public.siteUrl}/header-desktop.webp` },
+    { property: 'og:url', content: pageUrl },
+    { property: 'og:image', content: `${baseUrl}/header-desktop.webp` },
     { property: 'og:site_name', content: 'My Bonsai' },
     { property: 'og:locale', content: 'en_IE' },
-    // Twitter Card
     { name: 'twitter:card', content: 'summary_large_image' },
     { name: 'twitter:title', content: pageTitle },
     { name: 'twitter:description', content: pageDescription },
-    { name: 'twitter:image', content: `${config.public.siteUrl}/header-desktop.webp` },
+    { name: 'twitter:image', content: `${baseUrl}/header-desktop.webp` },
   ],
-  link: [
-    {
-      rel: 'canonical',
-      href: `${config.public.siteUrl}/bonsai`,
-    },
-  ],
+  link: [{ rel: 'canonical', href: pageUrl }],
 })
 
 const { data, pending } = await useBonsais()
@@ -69,6 +60,29 @@ const {
   availabilityOptions,
   filteredBonsais,
 } = useBonsaiFilters(allBonsais)
+
+// ItemList JSON-LD — первые 50 бонсай из текущего отфильтрованного списка
+useHead({
+  script: [
+    {
+      type: 'application/ld+json',
+      innerHTML: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'ItemList',
+        name: 'Bonsai Collection',
+        description: allStylesData.description,
+        numberOfItems: filteredBonsais.value.length,
+        itemListElement: filteredBonsais.value.slice(0, 50).map((bonsai, index) => ({
+          '@type': 'ListItem',
+          position: index + 1,
+          name: bonsai.title,
+          url: `${baseUrl}/bonsai/${bonsai.slug}`,
+          image: bonsai.images[0]?.url || '',
+        })),
+      }),
+    },
+  ],
+})
 </script>
 
 <style scoped>
