@@ -45,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import type { FilterItem } from '../../../shared/types/filter'
+import type { FilterItem } from '#shared/types/filter'
 
 const props = defineProps<{
   items: FilterItem[]

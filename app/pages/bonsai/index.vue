@@ -19,8 +19,8 @@
 </template>
 
 <script setup lang="ts">
-import type { NormalizedBonsai } from '~~/shared/types/contentful'
-import { allStylesData } from '~~/shared/data/styles'
+import type { NormalizedBonsai } from '#shared/types/contentful'
+import { allStylesData } from '#shared/data/styles'
 
 const config = useRuntimeConfig()
 const baseUrl = config.public.siteUrl

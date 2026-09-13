@@ -34,8 +34,8 @@
 </template>
 
 <script setup lang="ts">
-import type { NormalizedBonsai } from '../../../shared/types/contentful'
-import { contentfulImageUrl } from '../../../shared/utils/contentful-image'
+import type { NormalizedBonsai } from '#shared/types/contentful'
+import { contentfulImageUrl } from '#shared/utils/contentful-image'
 
 defineProps<{
   bonsai: NormalizedBonsai

@@ -19,10 +19,6 @@ export default defineNuxtConfig({
     },
   ],
 
-  alias: {
-    '#/shared': './shared'
-  },
-
   app: {
     head: {
       htmlAttrs: {

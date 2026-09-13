@@ -1,6 +1,6 @@
-import type { NormalizedBonsai } from '../../shared/types/contentful'
+import type { NormalizedBonsai } from '#shared/types/contentful'
 import { useContentful, normalizeImage, type RawImage, type AssetImage } from './contentful'
-import { makeUniqueSlug } from '../../shared/utils/slugify'
+import { makeUniqueSlug } from '#shared/utils/slugify'
 
 interface RawTag {
   sys: {

@@ -1,6 +1,6 @@
 import { defineSitemapEventHandler, asSitemapUrl } from '#imports'
 import { fetchBonsais } from '../../utils/bonsai'
-import { getAllStyles } from '~~/shared/data/styles'
+import { getAllStyles } from '#shared/data/styles'
 
 export default defineSitemapEventHandler(async () => {
   const bonsais = await fetchBonsais()

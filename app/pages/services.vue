@@ -34,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import { contentfulImageUrl } from '../../shared/utils/contentful-image'
+import { contentfulImageUrl } from '#shared/utils/contentful-image'
 const config = useRuntimeConfig()
 const pageUrl = `${config.public.siteUrl}/services`
 const pageTitle = 'Bonsai Care & Maintenance Services'

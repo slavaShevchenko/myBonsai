@@ -43,8 +43,8 @@
 </template>
 
 <script setup lang="ts">
-import type { NormalizedBonsai } from '../../../shared/types/contentful'
-import type { FilterItem } from '../../../shared/types/filter'
+import type { NormalizedBonsai } from '#shared/types/contentful'
+import type { FilterItem } from '#shared/types/filter'
 
 defineProps<{
   pending: boolean

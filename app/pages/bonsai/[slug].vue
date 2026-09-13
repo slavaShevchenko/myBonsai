@@ -100,7 +100,7 @@
 </template>
 
 <script setup lang="ts">
-import { contentfulImageUrl } from '../../../shared/utils/contentful-image'
+import { contentfulImageUrl } from '#shared/utils/contentful-image'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Pagination, Navigation } from 'swiper/modules'
 import 'swiper/css'

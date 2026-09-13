@@ -5,7 +5,7 @@
 <script setup lang="ts">
 import { documentToHtmlString } from '@contentful/rich-text-html-renderer'
 import { BLOCKS, INLINES } from '@contentful/rich-text-types'
-import { contentfulImageUrl } from '../../shared/utils/contentful-image'
+import { contentfulImageUrl } from '#shared/utils/contentful-image'
 
 const props = defineProps<{
   document: any

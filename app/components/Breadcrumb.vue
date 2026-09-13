@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { getStyleBySlug } from '~~/shared/data/styles'
+import { getStyleBySlug } from '#shared/data/styles'
 
 const route = useRoute()
 const config = useRuntimeConfig()

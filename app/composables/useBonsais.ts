@@ -1,4 +1,4 @@
-import type { NormalizedBonsai } from '../../shared/types/contentful'
+import type { NormalizedBonsai } from '#shared/types/contentful'
 
 interface Response {
   items: NormalizedBonsai[]

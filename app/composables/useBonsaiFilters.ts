@@ -1,7 +1,7 @@
 import type { MaybeRefOrGetter } from 'vue'
-import type { NormalizedBonsai } from '~~/shared/types/contentful'
-import type { FilterItem } from '~~/shared/types/filter'
-import { getAllStyles } from '~~/shared/data/styles'
+import type { NormalizedBonsai } from '#shared/types/contentful'
+import type { FilterItem } from '#shared/types/filter'
+import { getAllStyles } from '#shared/data/styles'
 
 interface UseBonsaiFiltersOptions {
   fixedStyle?: MaybeRefOrGetter<string | null | undefined>
