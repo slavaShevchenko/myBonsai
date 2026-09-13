@@ -82,11 +82,13 @@ export default defineNuxtConfig({
 
   site: {
     url: 'https://my-bonsai.eu',
+    name: 'My Bonsai',
   },
 
   sitemap: {
     enabled: true,
     autoLastmod: false,
+    sitemapName: 'main-sitemap.xml',
     sources: [
       '/api/__sitemap__/urls',
     ],
