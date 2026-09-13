@@ -253,6 +253,7 @@ const popupImage = ref<string | null>(null)
 
 .bonsai-detail__section {
   display: flex;
+  align-items: center;
   gap: 8px;
   flex-wrap: wrap;
 }
@@ -260,6 +261,7 @@ const popupImage = ref<string | null>(null)
 .bonsai-detail__section--description {
   flex: 1 1 auto;
   flex-direction: column;
+  align-items: flex-start;
 }
 
 .bonsai-detail__section--price {
@@ -269,7 +271,8 @@ const popupImage = ref<string | null>(null)
 .bonsai-detail__label {
   font-weight: 700;
   color: var(--primary-color, #111813);
-  line-height: 1.5;
+  font-size: 16px;
+  line-height: 1;
 }
 
 .bonsai-detail__value {
