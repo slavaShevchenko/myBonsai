@@ -16,6 +16,8 @@
     "@nuxtjs/robots": "^6.1.4",
     "@nuxtjs/sitemap": "^8.3.4",
     "@pinia/nuxt": "^1.0.2",
+    "@vercel/analytics": "^2.0.1",
+    "@vercel/speed-insights": "^2.0.0",
     "contentful": "^11.12.9",
     "nuxt": "^4.5.2",
     "pinia": "^4.0.3",
