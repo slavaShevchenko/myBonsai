@@ -13,7 +13,7 @@
 <style scoped>
 .header {
   max-width: 2000px;
-  height: 500px;
+  height: 400px;
   margin: 0 auto;
   position: relative;
   z-index: 1;
