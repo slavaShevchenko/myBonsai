@@ -213,7 +213,6 @@ const popupImage = ref<string | null>(null)
 .bonsai-detail__slider-image {
   position: relative;
   width: 100%;
-  aspect-ratio: 4 / 3;
   overflow: hidden;
   border-radius: var(--border-radius-8, 8px);
   cursor: zoom-in;
@@ -275,7 +274,8 @@ const popupImage = ref<string | null>(null)
 
 .bonsai-detail__value {
   color: var(--text-muted, #666);
-  line-height: 1.5;
+  font-size: 16px;
+  line-height: 1.4;
   flex: 1;
 }
 

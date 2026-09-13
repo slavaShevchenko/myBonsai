@@ -142,6 +142,8 @@ const currentPopupAlt = ref<string>('Bonsai gallery image')
 .gallery__grid-item-description {
   padding-top: 8px;
   font-weight: 300;
+  font-size: 16px;
+  line-height: 1.4;
   text-align: center;
 }
 

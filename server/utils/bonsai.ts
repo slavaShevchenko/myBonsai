@@ -27,6 +27,7 @@ function normalizeBonsai(entry: any, includes: RawImage[]): Omit<NormalizedBonsa
     age: fields.age,
     height: fields.height,
     sold: fields.sold ?? false,
+    updatedAt: entry.sys.updatedAt,
   }
 }
 

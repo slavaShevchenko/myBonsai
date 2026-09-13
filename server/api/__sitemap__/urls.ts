@@ -9,7 +9,8 @@ export default defineSitemapEventHandler(async () => {
   const bonsaiUrls = bonsais.map((bonsai) => {
     return asSitemapUrl({
       loc: `/bonsai/${bonsai.slug}`,
-      lastmod: new Date(),
+      // Реальная дата последнего изменения записи в Contentful
+      ...(bonsai.updatedAt ? { lastmod: bonsai.updatedAt } : {}),
       changefreq: 'weekly',
       priority: 0.8,
       images: bonsai.images.slice(0, 5).map((img) => ({
@@ -19,10 +20,11 @@ export default defineSitemapEventHandler(async () => {
     })
   })
 
+  // Статичные страницы стилей: данные лежат в коде,
+  // поэтому lastmod не указываем — не обманываем поисковик
   const styleUrls = styles.map((style) => {
     return asSitemapUrl({
       loc: `/bonsai/style/${style.slug}`,
-      lastmod: new Date(),
       changefreq: 'monthly',
       priority: 0.7,
     })

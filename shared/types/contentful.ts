@@ -16,4 +16,5 @@ export interface NormalizedBonsai {
   age?: number
   height?: number
   sold?: boolean
+  updatedAt?: string
 }

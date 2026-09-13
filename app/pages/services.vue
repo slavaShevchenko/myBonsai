@@ -131,7 +131,8 @@ const services = computed(() => data.value?.items ?? [])
 
 .services__item-description {
   color: var(--text-muted);
-  line-height: 1.5;
+  font-size: 16px;
+  line-height: 1.4;
 }
 
 .services__item-price {

@@ -82,7 +82,8 @@ const html = computed(() => {
 
 .rich-text :deep(p) {
   margin: 16px 0;
-  line-height: 1.6;
+  font-size: 16px;
+  line-height: 1.4;
 }
 
 .rich-text :deep(h1),

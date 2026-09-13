@@ -103,8 +103,8 @@ useHead({
   max-width: 800px;
   margin: -16px auto 32px;
   text-align: center;
-  font-size: 18px;
-  line-height: 1.6;
+  font-size: 16px;
+  line-height: 1.4;
   color: var(--text-muted, #666);
 }
 
