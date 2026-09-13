@@ -71,7 +71,7 @@
 
           <div v-if="bonsai.price" class="bonsai-detail__section bonsai-detail__section--price">
             <div class="bonsai-detail__label">Price:</div>
-            <div class="bonsai-detail__value price-value">{{ bonsai.price }}</div>
+            <div class="bonsai-detail__value price-value" :class="{ 'price-value--sold' : bonsai.sold}">{{ bonsai.price }}</div>
           </div>
 
           <a
@@ -344,6 +344,11 @@ const popupImage = ref<string | null>(null)
 
 :deep(.swiper-pagination-bullet) {
   background: var(--accent-color, #BC002D);
+}
+
+.bonsai-detail__value.price-value.price-value--sold {
+  text-decoration: line-through;
+  color: var(--text-sold);
 }
 
 @media (max-width: 1199px) {

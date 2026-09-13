@@ -26,8 +26,9 @@
         </div>
       </div>
 
-      <div v-if="bonsai.price" class="bonsai-card__price">
-        {{ bonsai.price }}
+      <div v-if="bonsai.price" class="bonsai-card__spec bonsai-card__spec--price">
+        <span class="bonsai-card__spec-label">Price:</span>
+        <span class="bonsai-card__spec-value" :class="{ 'bonsai-card__spec-value--sold' : bonsai.sold}">{{ bonsai.price }}</span>
       </div>
     </div>
   </NuxtLink>
@@ -61,15 +62,20 @@ defineProps<{
 }
 
 .bonsai-card__image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-height: 400px;
+  padding-top: 24px;
   position: relative;
-  aspect-ratio: 4 / 3;
+  /* aspect-ratio: 4 / 3; */
   overflow: hidden;
 }
 
 .bonsai-card__image img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .bonsai-card__sold {
@@ -109,9 +115,10 @@ defineProps<{
 
 .bonsai-card__spec {
   display: flex;
+  align-items: flex-end;
   gap: 8px;
   font-size: 13px;
-  line-height: 1.4;
+  line-height: 1;
 }
 
 .bonsai-card__spec-label {
@@ -126,10 +133,18 @@ defineProps<{
   font-size: 16px;
 }
 
-.bonsai-card__price {
+.bonsai-card__spec--price .bonsai-card__spec-value {
   font-size: 20px;
   font-weight: 700;
   color: var(--accent-color);
-  margin-top: auto;
+}
+
+.bonsai-card__spec--price .bonsai-card__spec-value {
+  margin-bottom: -2px;
+}
+
+.bonsai-card__spec--price .bonsai-card__spec-value.bonsai-card__spec-value--sold {
+  text-decoration: line-through;
+  color: var(--text-sold);
 }
 </style>
