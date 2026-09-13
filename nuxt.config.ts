@@ -19,13 +19,17 @@ export default defineNuxtConfig({
     },
   ],
 
+  alias: {
+    '#/shared': './shared'
+  },
+
   app: {
     head: {
       htmlAttrs: {
         lang: 'en',
       },
       titleTemplate: '%s | My Bonsai',
-            meta: [
+      meta: [
         {
           name: 'viewport',
           content: 'width=device-width, initial-scale=1',

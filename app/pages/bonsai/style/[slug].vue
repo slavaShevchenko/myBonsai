@@ -20,8 +20,8 @@
 </template>
 
 <script setup lang="ts">
-import type { NormalizedBonsai } from '../../../../shared/types/contentful'
-import { getStyleBySlug } from '../../../../shared/data/styles'
+import type { NormalizedBonsai } from '~~/shared/types/contentful'
+import { getStyleBySlug } from '~~/shared/data/styles'
 
 const route = useRoute()
 const config = useRuntimeConfig()
