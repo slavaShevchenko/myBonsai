@@ -10,6 +10,8 @@ export default defineNuxtConfig({
     '@nuxt/image',
     '@nuxtjs/sitemap',
     '@nuxtjs/robots',
+    '@vercel/analytics',
+    '@vercel/speed-insights',
   ],
 
   components: [
